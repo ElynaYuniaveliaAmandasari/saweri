@@ -61,14 +61,16 @@
         const donationUpdateEl = document.getElementById('donation-update');
 
         window.Echo.private(`donations.user.${userId}`)
-            .listen('DonationReceived', (data) => {
+            .listen('.donation.received', (data) => {
+                console.log("EVENT MASUK:", data);
+
                 const donation = data.donation;
                 const newAmount = parseInt(donation.amount);
 
                 let currentTotal = parseInt(totalDonationEl.innerText.replace(/\D/g, ''));
                 let updatedTotal = currentTotal + newAmount;
 
-                donationUpdateEl.innerText = '+ Rp ' + newAmount.toLocaleString();
+                donationUpdateEl.innerText = '+ Rp ${newAmount.toLocaleString()}';
                 donationUpdateEl.style.opacity = 1;
                 donationUpdateEl.style.transition = 'opacity 0.5s ease-in-out';
 
@@ -90,6 +92,8 @@
                     timer: 5000
                 });
             });
+
+
     });
     </script>
     @endpush

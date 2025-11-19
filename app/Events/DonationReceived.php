@@ -2,11 +2,10 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
+use App\Models\Donation;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -26,16 +25,15 @@ class DonationReceived implements ShouldBroadcastNow
 
     /**
      * Get the channels the event should broadcast on.
-     *
-     * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn(): array
+    public function broadcastOn()
     {
-        return [
-            new PrivateChannel('donation.user.'.$this->donation->user_id),
-        ];
+        return new PrivateChannel('donations.user.' . $this->donation->user_id);
     }
 
+    /**
+     * Data sent with the event.
+     */
     public function broadcastWith(): array
     {
         return [
@@ -43,7 +41,16 @@ class DonationReceived implements ShouldBroadcastNow
                 'amount' => $this->donation->amount,
                 'name' => $this->donation->name,
                 'message' => $this->donation->message,
+                'created_at' => $this->donation->created_at->toDateTimeString(),
             ],
         ];
+    }
+
+    /**
+     * Broadcast name of event.
+     */
+    public function broadcastAs(): string
+    {
+        return 'donation.received';
     }
 }

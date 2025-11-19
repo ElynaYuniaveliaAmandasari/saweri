@@ -8,4 +8,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::post('/xendit/callback', [DonationController::class, 'callbackXendit'])->name('callback-xendit');
+// ✅ UBAH DARI: /xendit-callback MENJADI: /xendit/callback
+Route::post('/xendit/callback', [DonationController::class, 'callbackXendit'])
+    ->name('callback-xendit');
