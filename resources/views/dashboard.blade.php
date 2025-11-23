@@ -70,7 +70,7 @@
                 let currentTotal = parseInt(totalDonationEl.innerText.replace(/\D/g, ''));
                 let updatedTotal = currentTotal + newAmount;
 
-                donationUpdateEl.innerText = '+ Rp ${newAmount.toLocaleString()}';
+                donationUpdateEl.innerText = `+ Rp ${newAmount.toLocaleString("id-ID")}`;
                 donationUpdateEl.style.opacity = 1;
                 donationUpdateEl.style.transition = 'opacity 0.5s ease-in-out';
 
