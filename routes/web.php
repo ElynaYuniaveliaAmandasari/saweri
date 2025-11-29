@@ -48,5 +48,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::get('/api/total-donasi', function () {
+    return [
+        'total' => Auth::user()
+            ->donations()
+            ->where('status', 'completed')
+            ->sum('amount')
+    ];
+})->middleware('auth');
+
+
 // 🔐 Auth routes (login, register, dll)
 require __DIR__.'/auth.php';

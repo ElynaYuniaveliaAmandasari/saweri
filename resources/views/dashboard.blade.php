@@ -54,6 +54,7 @@
 
     @push('script-head')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         const userId = {{ Auth::id() }};
@@ -67,19 +68,26 @@
                 const donation = data.donation;
                 const newAmount = parseInt(donation.amount);
 
-                let currentTotal = parseInt(totalDonationEl.innerText.replace(/\D/g, ''));
-                let updatedTotal = currentTotal + newAmount;
-
+                // Tampilkan "+ Rp x"
                 donationUpdateEl.innerText = `+ Rp ${newAmount.toLocaleString("id-ID")}`;
                 donationUpdateEl.style.opacity = 1;
                 donationUpdateEl.style.transition = 'opacity 0.5s ease-in-out';
 
+                // Setelah 3 detik, sembunyikan "+ Rp x", BARU update total
                 setTimeout(() => {
                     donationUpdateEl.style.opacity = 0;
-                }, 10000);
 
-                totalDonationEl.innerText = updatedTotal.toLocaleString();
+                    // Ambil total terbaru dari backend (tanpa reload)
+                    fetch("/api/total-donasi")
+                        .then(res => res.json())
+                        .then(data => {
+                            totalDonationEl.innerText = 
+                                parseInt(data.total).toLocaleString("id-ID");
+                        });
 
+                }, 3000);
+
+                // Notifikasi cantik
                 Swal.fire({
                     title: '✨ Donasi Baru Diterima!',
                     html: `
@@ -92,10 +100,9 @@
                     timer: 5000
                 });
             });
-
-
     });
     </script>
     @endpush
+
 
 </x-app-layout>
